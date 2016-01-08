@@ -37,6 +37,12 @@
   */
 
   function app () {
+    var $inputImage = $('[data-js="input-image"]');
+    var $inputBrand = $('[data-js="input-brand"]');
+    var $inputYear = $('[data-js="input-year"]');
+    var $inputColor = $('[data-js="input-color"]');
+    var $carTable = $('[data-js="car-table"]');
+
     return {
       init: function init () {
         this.initEvents();
@@ -45,6 +51,11 @@
 
       initEvents: function initEvents () {
         $('[data-js="submit-form"]').on('click', this.handleSubmit);
+
+      },
+
+      isRequestOk: function isRequestOk (request) {
+        return request.readyState === 4 && request.status === 200;
       },
     
       makeRequest: function makeRequest (method, url, callback) {
@@ -66,25 +77,29 @@
         }
       },
 
-      appendTdOnTr: function appendTdOnTr (tr, text) {
-        var newTd = doc.createElement('td');
-        var textTd = doc.createTextNode(text);
-        newTd.appendChild(textTd);
-        tr.appendChild(newTd);
+      emptySubmits: function emptySubmits () {
+        $inputImage.get().value = '';
+        $inputBrand.get().value = '';
+        $inputYear.get().value = '';
+        $inputColor.get().value = '';
       },
 
       handleSubmit: function handleSubmit (event) {
         event.preventDefault();
-        var newLine = doc.createElement('tr');
-        app().appendTdOnTr(newLine, $('[data-js="input-image"]').get().value);
-        app().appendTdOnTr(newLine, $('[data-js="input-brand"]').get().value);
-        app().appendTdOnTr(newLine, $('[data-js="input-year"]').get().value);
-        app().appendTdOnTr(newLine, $('[data-js="input-color"]').get().value);
-        $('[data-js="car-table"]').get().appendChild(newLine);
+        $carTable.get().insertAdjacentHTML('beforeend', '<tr>'+ 
+          '<td>' + $inputImage.get().value + '</td>' +
+          '<td>' + $inputBrand.get().value + '</td>' +
+          '<td>' + $inputYear.get().value + '</td>' +
+          '<td>' + $inputColor.get().value + '</td>' +
+          '<td><button type="submit" data-js="remove-button">Remover</button></td>' +
+          '</tr>');
+        $('[data-js="remove-button"]').on('click', app().handleRemoveButton);
+        app().emptySubmits();
       },
 
-      isRequestOk: function isRequestOk (request) {
-        return request.readyState === 4 && request.status === 200;
+      handleRemoveButton: function handleRemoveButton (event) {
+          event.preventDefault();
+          $carTable.get().removeChild(this.parentNode.parentNode.parentNode);
       }
     }
   }
