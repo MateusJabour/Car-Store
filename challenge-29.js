@@ -40,20 +40,20 @@
     return {
       init: function init () {
         this.initEvents();
-        this.makeRequest('GET', '/company.json', this.handleAjax);
+        this.makeRequest('GET', './company.json', this.handleAjax);
       },
 
       initEvents: function initEvents () {
         $('[data-js="submit-form"]').on('click', this.handleSubmit);
       },
-    
+
       makeRequest: function makeRequest (method, url, callback) {
         var ajax = new XMLHttpRequest();
         ajax.open(method, url);
         ajax.send();
         ajax.addEventListener('readystatechange', callback);
       },
-    
+
       handleAjax: function handleAjax () {
       if( app().isRequestOk(this) ) {
         try{
@@ -76,10 +76,10 @@
       handleSubmit: function handleSubmit (event) {
         event.preventDefault();
         var newLine = doc.createElement('tr');
-        app().appendTdOnTr(newLine, $('[data-js="input-image"]').get().value);
-        app().appendTdOnTr(newLine, $('[data-js="input-brand"]').get().value);
-        app().appendTdOnTr(newLine, $('[data-js="input-year"]').get().value);
-        app().appendTdOnTr(newLine, $('[data-js="input-color"]').get().value);
+        var carInformation = ['image', 'brand', 'year', 'color'];
+        carInformation.forEach(function (info) {
+          app().appendTdOnTr(newLine, $('[data-js="input-' + info + '"]').get().value);
+        })
         $('[data-js="car-table"]').get().appendChild(newLine);
       },
 
