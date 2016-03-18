@@ -57,14 +57,14 @@
       isRequestOk: function isRequestOk (request) {
         return request.readyState === 4 && request.status === 200;
       },
-    
+
       makeRequest: function makeRequest (method, url, callback) {
         var ajax = new XMLHttpRequest();
         ajax.open(method, url);
         ajax.send();
         ajax.addEventListener('readystatechange', callback);
       },
-    
+
       handleAjax: function handleAjax () {
       if( app().isRequestOk(this) ) {
         try{
@@ -86,12 +86,12 @@
 
       handleSubmit: function handleSubmit (event) {
         event.preventDefault();
-        $carTable.get().insertAdjacentHTML('beforeend', '<tr>'+ 
+        $carTable.get().insertAdjacentHTML('beforeend', '<tr id="information-row" data-js="information-row">'+
           '<td>' + $inputImage.get().value + '</td>' +
           '<td>' + $inputBrand.get().value + '</td>' +
           '<td>' + $inputYear.get().value + '</td>' +
           '<td>' + $inputColor.get().value + '</td>' +
-          '<td><button type="submit" data-js="remove-button">Remover</button></td>' +
+          '<td><button data-tr-id="information-row" type="submit" data-js="remove-button">Remover</button></td>' +
           '</tr>');
         $('[data-js="remove-button"]').on('click', app().handleRemoveButton);
         app().emptySubmits();
@@ -99,7 +99,8 @@
 
       handleRemoveButton: function handleRemoveButton (event) {
           event.preventDefault();
-          $carTable.get().removeChild(this.parentNode.parentNode.parentNode);
+          console.log(document.getElementById(this.getAttribute('data-tr-id')));
+          $carTable.get().removeChild(document.getElementById(this.getAttribute('data-tr-id')).parentNode);
       }
     }
   }
