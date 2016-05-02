@@ -48,7 +48,7 @@
       init: function init () {
         this.initEvents();
         this.makeRequest.get('http://localhost:3000/car', this.showCar.all);
-        this.makeRequest.get('/company.json', this.getNameAndPhone);
+        this.makeRequest.get('./company.json', this.getNameAndPhone);
       },
 
       initEvents: function initEvents () {
@@ -66,7 +66,7 @@
         $inputPlate.get().value = '';
         $inputColor.get().value = '';
       },
-      
+
       makeRequest: {
         get: function (url, callback) {
           var ajax = new XMLHttpRequest();
@@ -83,7 +83,7 @@
           ajax.addEventListener('readystatechange', callback);
         }
       },
-    
+
       getNameAndPhone: function getNameAndPhone () {
         if( app().isRequestOk(this) ) {
           try{
@@ -97,13 +97,13 @@
       },
 
       putCarOnTable: function putCarOnTable (car) {
-        $carTable.get().insertAdjacentHTML('beforeend', '<tr>'+ 
+        $carTable.get().insertAdjacentHTML('beforeend', '<tr id="information-row-' + Date.now() + '" data-js="information-row">'+
            '<td>' + car.image + '</td>' +
-           '<td>' + car.brandModel + '</td>' + 
+           '<td>' + car.brandModel + '</td>' +
            '<td>' + car.year + '</td>' +
            '<td>' + car.plate + '</td>' +
            '<td>' + car.color + '</td>' +
-           '<td><button type="submit" data-js="remove-button">Remover</button></td>' +
+           '<td><button data-tr-id="information-row-' + Date.now() + '" type="submit" data-js="remove-button">Remover</button></td>' +
            '</tr>');
       },
 
@@ -138,7 +138,7 @@
 
       handlePost: function handlePost () {
         if( app().isRequestOk(this) ) {
-          try {            
+          try {
             console.log('beleza')
           } catch(e) {
             console.log('deu merda');
@@ -148,7 +148,7 @@
 
       handleSubmit: function handleSubmit (event) {
         event.preventDefault();
-        app().makeRequest.post('http://localhost:3000/car', 'image=' + $inputImage.get().value + '&brandModel=' + $inputBrand.get().value + 
+        app().makeRequest.post('http://localhost:3000/car', 'image=' + $inputImage.get().value + '&brandModel=' + $inputBrand.get().value +
           '&year=' + $inputYear.get().value + '&color=' + $inputColor.get().value + '&plate=' + $inputPlate.get().value , app().handlePost);
         app().makeRequest.get('http://localhost:3000/car', app().showCar.one);
         app().emptySubmits();
@@ -156,7 +156,8 @@
 
       handleRemoveButton: function handleRemoveButton (event) {
           event.preventDefault();
-          $carTable.get().removeChild(this.parentNode.parentNode.parentNode);
+          console.log(document.getElementById(this.getAttribute('data-tr-id')));
+          $carTable.get().removeChild(document.getElementById(this.getAttribute('data-tr-id')).parentNode);
       }
     }
   }
