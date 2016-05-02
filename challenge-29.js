@@ -86,12 +86,12 @@
 
       handleSubmit: function handleSubmit (event) {
         event.preventDefault();
-        $carTable.get().insertAdjacentHTML('beforeend', '<tr id="information-row" data-js="information-row">'+
+        $carTable.get().insertAdjacentHTML('beforeend', '<tr id="information-row-' + Date.now() + '" data-js="information-row">'+
           '<td>' + $inputImage.get().value + '</td>' +
           '<td>' + $inputBrand.get().value + '</td>' +
           '<td>' + $inputYear.get().value + '</td>' +
           '<td>' + $inputColor.get().value + '</td>' +
-          '<td><button data-tr-id="information-row" type="submit" data-js="remove-button">Remover</button></td>' +
+          '<td><button data-tr-id="information-row-' + Date.now() + '" type="submit" data-js="remove-button">Remover</button></td>' +
           '</tr>');
         $('[data-js="remove-button"]').on('click', app().handleRemoveButton);
         app().emptySubmits();
