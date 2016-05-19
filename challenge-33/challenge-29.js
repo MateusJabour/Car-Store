@@ -63,7 +63,7 @@
       emptySubmits: function emptySubmits () {
           var inputs = $form.get().children;
           Array.prototype.forEach.call(inputs, function (item) {
-            if(item.tagname === 'LABEL') {
+            if(item.tagName === 'LABEL') {
               item.firstElementChild.value = '';
             }
           });
@@ -100,14 +100,15 @@
       },
 
       putCarOnTable: function putCarOnTable (car) {
+        var timestamp = Math.floor(Date.now());
         $carTable.get().insertAdjacentHTML('beforeend',
-          '<tr id="information-row' + Math.floor(Date.now()) + '" data-js="information-row">'+
+          '<tr id="information-row' + timestamp + '" data-js="information-row">'+
            '<td class="car-image">' + car.image + '</td>' +
            '<td class="car-brandModel">' + car.brandModel + '</td>' +
            '<td class="car-year">' + car.year + '</td>' +
            '<td class="car-plate">' + car.plate + '</td>' +
            '<td class="car-color">' + car.color + '</td>' +
-           '<td><button data-tr-id="information-row' + Math.floor(Date.now()) + '" type="submit" data-js="remove-button">Remover</button></td>' +
+           '<td><button data-tr-id="information-row' + timestamp + '" type="submit" data-js="remove-button-' + car.plate +'">Remover</button></td>' +
          '</tr>');
       },
 
@@ -118,7 +119,7 @@
               var data = JSON.parse(this.responseText);
               var lastCar = data[data.length - 1];
               app().putCarOnTable(lastCar);
-              $('[data-js="remove-button"]').on('click', app().handleRemoveButton);
+              $('[data-js="remove-button-' + lastCar.plate + '"]').on('click', app().handleRemoveButton);
             } catch(error) {
               console.log(error);
             }
@@ -131,8 +132,8 @@
               var data = JSON.parse(this.responseText);
               data.forEach(function (element) {
                 app().putCarOnTable(element);
+                $('[data-js="remove-button-' + element.plate + '"]').on('click', app().handleRemoveButton);
               });
-              $('[data-js="remove-button"]').on('click', app().handleRemoveButton);
             } catch(error) {
               console.log(error);
             }
@@ -164,10 +165,10 @@
       },
 
       handleRemoveButton: function handleRemoveButton (event) {
-          event.preventDefault();
-          var currentTr = document.getElementById(this.getAttribute('data-tr-id'));
-          var carPlate = currentTr.children[3].innerHTML;
-          app().makeRequest.delete('http://localhost:3000/car', 'plate=' + carPlate, app().handleDelete(currentTr.parentNode));
+        event.preventDefault();
+        var currentTr = document.getElementById(this.getAttribute('data-tr-id'));
+        var carPlate = currentTr.children[3].innerHTML;
+        app().makeRequest.delete('http://localhost:3000/car', 'plate=' + carPlate, app().handleDelete(currentTr.parentNode));
       },
 
       handleDelete: function handleDelete (deletedNode) {
@@ -176,7 +177,7 @@
             try {
               $carTable.get().removeChild(deletedNode);
             } catch (error) {
-              console.log('Carro deletado!');
+              console.log(error);
             }
           }
         };
